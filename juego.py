@@ -1,3 +1,4 @@
+
 def crear_tablero(filas, columnas):
     """Crea el tablero de Juego
 
@@ -30,12 +31,12 @@ def mostrar_tablero(tablero):
             print(casilla, end="  ")
 
 
-def introducir_ficha(tablero, columna, color):
+def introducir_ficha(tablero, columna, color_ficha):
     """Esta función introduce una ficha en el tablero indicado.
 
     :param tablero: Lista.
     :param columna: Número de columnas.
-    :param color: Representación de la ficha del tablero
+    :param color_ficha: Representación de la ficha del tablero
     :return:
     """
     # validamos no pasarnos el rango de la longitud de la primera fila (columnas) y menor a 0
@@ -49,15 +50,63 @@ def introducir_ficha(tablero, columna, color):
         for fila in range(len(tablero) - 1, -1, -1):
             # válida si existe un punto en tablero significa que esta vacío
             if tablero[fila][columna] == ".":
-                tablero[fila][columna] = color
+                tablero[fila][columna] = color_ficha
                 # retorna el tablero modificado con la nueva ficha
                 return tablero
 
 
-def ingreso_ficha_usuario():
-    """Ingreso de la columna y el tipo de ficha de usuario """
 
-    columna = int(input("Ingresar la posición de columna a ingresar ficha: "))
-    color = input("Ingresar el tipo de ficha a utilizar: ")
+def revisar_filas(tablero, color_ficha):
+    # Obtenemos el número de filas y columnas
+    numero_filas = len(tablero)
+    numero_columnas = len(tablero[0])
+    # Recorremos las filas en busca de 4 en raya
+    for fila in range(numero_filas):
+        for columna in range(numero_columnas - 3):
+            if (tablero[fila][columna] == color_ficha and tablero[fila][columna + 1] == color_ficha
+                    and tablero[fila][columna + 2] == color_ficha and tablero[fila][columna + 3] == color_ficha):
+                return True
 
-    return columna, color
+
+def revisar_columnas(tablero, color_ficha):
+    # Obtenemos el número de filas y columnas
+    numero_filas = len(tablero)
+    numero_columnas = len(tablero[0])
+    # Recorremos las columnas en busca de 4 en raya
+    for columna in range(numero_columnas):
+        for fila in range(numero_filas - 3):
+            if (tablero[fila][columna] == color_ficha and tablero[fila + 1][columna] == color_ficha
+                    and tablero[fila + 2][columna] == color_ficha and tablero[fila + 3][columna] == color_ficha):
+                return True
+
+
+def revisar_diagonal_derecha(tablero, color_ficha):
+    # obtenemos el número de filas y columnas
+    numero_filas = len(tablero)
+    numero_columnas = len(tablero[0])
+    # Recorremos las filas en busca de 4 en raya
+    for columna in range(numero_columnas - 3):
+        for fila in range(numero_filas - 1, 2, -1):  # desde abajo hacia arriba y de izquierda a derecha
+            if tablero[fila][columna] == color_ficha and tablero[fila - 1][columna + 1] == color_ficha and \
+                    tablero[fila - 2][columna + 2] == color_ficha and tablero[fila - 3][columna + 3] == color_ficha:
+                return True
+
+
+def revisar_diagonal_izquierda(tablero, color_ficha):
+    # obtenemos el número de filas y columnas
+    numero_filas = len(tablero)
+    numero_columnas = len(tablero[0])
+    # Recorremos las filas en busca de 4 en raya
+    for columna in range(numero_columnas - 1, 2, -1):
+        for fila in range(numero_filas - 1, 2, -1):  # desde abajo hacia arriba y de derecha a izquierda
+            if tablero[fila][columna] == color_ficha and tablero[fila - 1][columna - 1] == color_ficha and \
+                    tablero[fila - 2][columna - 2] == color_ficha and tablero[fila - 3][columna - 3] == color_ficha:
+                return True
+
+
+def comprobar_ganador(tablero, color_ficha):
+    """Comprueba si se ha producido un cuatro en raya, invocamos a todas las funciones"""
+    return revisar_filas(tablero, color_ficha) or revisar_columnas(tablero, color_ficha) or revisar_diagonal_derecha(
+        tablero, color_ficha) or revisar_diagonal_izquierda(tablero, color_ficha)
+
+
